@@ -1,0 +1,61 @@
+.ts-dropdown-content {
+  background-color: var(--surface);
+}
+
+.ts-wrapper {
+  flex: 1;
+  min-width: 160px;
+
+  .ts-control {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-size: 0.875rem;
+    padding: 0.6rem 0.875rem;
+    box-shadow: none;
+    cursor: pointer;
+
+    input {
+      color: var(--text);
+      &::placeholder { color: var(--text-muted); }
+    }
+  }
+
+  &.focus .ts-control {
+    border-color: var(--accent);
+    box-shadow: none;
+  }
+}
+
+.ts-dropdown {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  color: var(--text);
+  font-size: 0.875rem;
+
+  .ts-dropdown-content { max-height: 240px; }
+
+  .option {
+    padding: 0.5rem 0.875rem;
+    color: var(--text-muted);
+
+    &:hover,
+    &.active   { background: #e8ecf4; color: var(--text); }
+    &.selected { color: var(--accent); }
+  }
+
+  input {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    color: var(--text);
+    padding: 0.4rem 0.6rem;
+    font-size: 0.85rem;
+    width: calc(100% - 1.5rem);
+    margin: 0.5rem 0.75rem;
+    outline: none;
+  }
+}

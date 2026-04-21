@@ -1,0 +1,301 @@
+// ─── Overlay & shell ──────────────────────────────────────────────────────────
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(28, 27, 24, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  z-index: 100;
+  backdrop-filter: blur(2px);
+}
+
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  width: 100%;
+  max-width: 640px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  padding: 1.75rem;
+}
+
+#modal-content {
+  display: grid;
+  gap: 20px;
+}
+
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  line-height: 1;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  transition: color 0.15s, background 0.15s;
+
+  &:hover {
+    color: var(--text);
+    background: var(--bg);
+  }
+}
+
+// ─── Two-column body ──────────────────────────────────────────────────────────
+
+.modal-body {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 1.5rem;
+  margin: 1.75rem 0;
+}
+
+.detail-image-col { flex-shrink: 0; }
+
+// ─── TCGDex image ─────────────────────────────────────────────────────────────
+
+.tcgdex-img-wrap {
+  width: 180px;
+  min-height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tcgdex-img {
+  width: 100%;
+  border-radius: 8px;
+  display: block;
+}
+
+.tcgdex-no-img {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.tcgdex-skeleton {
+  width: 100%;
+  height: 250px;
+  background: linear-gradient(90deg, var(--bg) 25%, var(--border) 50%, var(--bg) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: 8px;
+
+  &--text {
+    height: 80px;
+    border-radius: 6px;
+  }
+}
+
+// ─── Detail header & sub-grades ───────────────────────────────────────────────
+
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.detail-name {
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 1.3;
+  margin-bottom: 0.5rem;
+}
+
+.detail-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.detail-subgrades {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 1.75rem;
+}
+
+.detail-sub {
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  padding: 0.7rem 0.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.detail-sub-label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.detail-sub-val {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+// ─── Section title ────────────────────────────────────────────────────────────
+
+.detail-section-title {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.detail-count {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.1rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+// ─── Grade table ──────────────────────────────────────────────────────────────
+
+.table-wrap {
+  overflow-x: auto;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+
+.grade-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+
+  th {
+    padding: 0.55rem 0.75rem;
+    text-align: left;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 0.55rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    white-space: nowrap;
+  }
+
+  tbody {
+    tr:last-child td { border-bottom: none; }
+    tr:hover td      { background: var(--bg); }
+  }
+}
+
+.row-current {
+  td { background: #edf2f8; }
+  &:hover td { background: #e4ecf6 !important; }
+}
+
+// ─── TCGDex info ──────────────────────────────────────────────────────────────
+
+.tcg-description {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 0.75rem;
+  font-style: italic;
+}
+
+.tcg-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-bottom: 0.75rem;
+}
+
+.tcg-chip {
+  font-size: 0.72rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  font-weight: 500;
+
+  &--type {
+    background: #e8ecf4;
+    border-color: #c8d0e8;
+    color: #3a4a70;
+  }
+}
+
+.tcg-illustrator {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 0.875rem;
+}
+
+.tcg-attacks {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.tcg-attack {
+  background: var(--bg);
+  border-radius: 6px;
+  padding: 0.6rem 0.75rem;
+}
+
+.tcg-attack-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.2rem;
+}
+
+.tcg-attack-name   { font-size: 0.82rem; font-weight: 600; color: var(--text); }
+.tcg-attack-damage { font-size: 0.85rem; font-weight: 700; color: var(--accent); }
+.tcg-attack-effect { font-size: 0.75rem; color: var(--text-muted); line-height: 1.45; }
+
+// ─── Responsive ───────────────────────────────────────────────────────────────
+
+@media (max-width: 520px) {
+  .modal-body {
+    grid-template-columns: 1fr;
+  }
+
+  .tcgdex-img-wrap {
+    width: 140px;
+    margin: 0 auto;
+    min-height: auto;
+  }
+}

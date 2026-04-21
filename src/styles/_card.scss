@@ -1,0 +1,152 @@
+// ─── Grid ─────────────────────────────────────────────────────────────────────
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 0.875rem;
+}
+
+// ─── Card ─────────────────────────────────────────────────────────────────────
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  cursor: pointer;
+  transition: box-shadow 0.15s, border-color 0.15s;
+  height: 100%;
+
+  &:hover {
+    border-color: #b8b6b0;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+  }
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-id {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.card-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--text);
+}
+
+.card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.card-date {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-top: auto;
+  padding-top: 0.2rem;
+}
+
+// ─── Grade badge ──────────────────────────────────────────────────────────────
+
+.grade-badge {
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.18rem 0.5rem;
+  border-radius: 5px;
+  letter-spacing: 0.01em;
+
+  &--lg {
+    font-size: 1.1rem;
+    padding: 0.35rem 0.75rem;
+    flex-shrink: 0;
+  }
+}
+
+.grade-10  { background: #fef3c7; color: #92610a;  border: 1px solid #f6d86a; }
+.grade-9   { background: #ecf5ec; color: #2d6a2d;  border: 1px solid #c0dbc0; }
+.grade-8   { background: #e8f0f8; color: #2c5282;  border: 1px solid #b8cfe8; }
+.grade-7   { background: #fdf3e3; color: #8a5a0a;  border: 1px solid #e8cc96; }
+.grade-low { background: #fdf0ee; color: #9b3a2a;  border: 1px solid #e8bdb8; }
+.grade-ce  { background: #f3eefc; color: #5a3a8a;  border: 1px solid #cebef0; }
+
+// ─── Tags ─────────────────────────────────────────────────────────────────────
+
+.tag {
+  font-size: 0.68rem;
+  background: #e8ecf4;
+  color: #4a5a7a;
+  padding: 0.18rem 0.45rem;
+  border-radius: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+
+  &-set  { background: #ebebeb; color: var(--text-muted); }
+  &-lang { background: #e4f0e8; color: #2a5e38; }
+  &-year { background: #f5f0e4; color: #7a6020; }
+}
+
+// ─── Sub-grades ───────────────────────────────────────────────────────────────
+
+.sub-grades {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.3rem;
+  margin-top: 0.2rem;
+}
+
+.sub-grade {
+  background: var(--bg);
+  border-radius: 5px;
+  padding: 0.35rem 0.2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.12rem;
+}
+
+.sub-label {
+  font-size: 0.58rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.sub-val {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+// ─── Load more ────────────────────────────────────────────────────────────────
+
+.load-more {
+  grid-column: 1 / -1;
+  padding: 0.7rem;
+  background: var(--surface);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.15s;
+
+  &:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+}
