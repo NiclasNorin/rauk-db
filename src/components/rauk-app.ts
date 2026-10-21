@@ -2,7 +2,7 @@ import { LitElement, html } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { API_URL, PAGE_SIZE, DEFAULT_FILTERS } from '../lib/types';
 import type { Card, FilterState } from '../lib/types';
-import { getLanguage, gradeNumeric } from '../lib/utils';
+import { getLanguage, gradeNumeric, compareCardsByGradeAndSubgrades } from '../lib/utils';
 import './rauk-filter-bar';
 import './rauk-card-grid';
 import './rauk-modal';
@@ -21,6 +21,8 @@ export class RaukApp extends LitElement {
 
   override async connectedCallback(): Promise<void> {
     super.connectedCallback();
+    document.body.classList.remove('theme-raukar-subtle', 'theme-raukar-dramatic');
+    document.body.classList.add('theme-raukar-balanced');
     await this.loadData();
   }
 
@@ -50,7 +52,8 @@ export class RaukApp extends LitElement {
 
   private applyFilters(): void {
     const { query, language, set, grade, sort } = this.filters;
-    const q = query.toLowerCase();
+    const q = query.trim().toLowerCase();
+    const normalizedQ = q.startsWith('#') ? q.slice(1) : q;
 
     let results = this.allCards.filter(card => {
       if (language && getLanguage(card.Game) !== language) return false;
@@ -60,16 +63,27 @@ export class RaukApp extends LitElement {
         else if (grade === '7') { if (gradeNumeric(card.Grade) > 7 || card.Grade === 'CE') return false; }
         else { if (card.Grade !== grade) return false; }
       }
-      if (q && !`${card['Card Name']} ${card.Set}`.toLowerCase().includes(q)) return false;
+      if (q) {
+        const searchable = `${card['Card Name']} ${card.Set}`.toLowerCase();
+        const cardId = card.id.toLowerCase();
+        const normalizedCardId = cardId.startsWith('#') ? cardId.slice(1) : cardId;
+        const matchesText = searchable.includes(q);
+        const matchesId = cardId.includes(q)
+          || normalizedCardId.includes(normalizedQ)
+          || cardId.includes(normalizedQ);
+        if (!matchesText && !matchesId) return false;
+      }
       return true;
     });
 
     results.sort((a, b) => {
+      const aDate = a['Date Graded'] ?? '';
+      const bDate = b['Date Graded'] ?? '';
       switch (sort) {
-        case 'date-asc':   return a['Date Graded'].localeCompare(b['Date Graded']);
-        case 'date-desc':  return b['Date Graded'].localeCompare(a['Date Graded']);
-        case 'grade-desc': return gradeNumeric(b.Grade) - gradeNumeric(a.Grade);
-        case 'grade-asc':  return gradeNumeric(a.Grade) - gradeNumeric(b.Grade);
+        case 'date-asc':   return aDate.localeCompare(bDate);
+        case 'date-desc':  return bDate.localeCompare(aDate);
+        case 'grade-desc': return compareCardsByGradeAndSubgrades(a, b, false);
+        case 'grade-asc':  return compareCardsByGradeAndSubgrades(a, b, true);
         case 'name-asc':   return a['Card Name'].localeCompare(b['Card Name']);
         default:           return 0;
       }
@@ -108,7 +122,7 @@ export class RaukApp extends LitElement {
     const count     = this.filteredCards.length;
 
     return html`
-      <header>
+      <header class="personality-shell personality-header bg-raukar-balanced">
         <h1>RaukCard Pokémon Card Collection</h1>
         <p class="subtitle">${this.allCards.length} Pokémon cards in collection</p>
       </header>
@@ -120,7 +134,7 @@ export class RaukApp extends LitElement {
         @rauk-filter-change=${this.onFilterChange}
       ></rauk-filter-bar>
 
-      <div class="results-bar">
+      <div class="results-bar personality-shell personality-results bg-raukar-subtle">
         <span>${count} card${count !== 1 ? 's' : ''}</span>
         <button class="reset-btn" @click=${this.reset}>Reset filters</button>
       </div>

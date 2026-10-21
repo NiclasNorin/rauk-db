@@ -81,6 +81,9 @@ export class RaukModal extends LitElement {
     const { card, allCards } = this;
     const lang = getLanguage(card.Game);
     const year = card.Game.match(/\b(\d{4})\b/)?.[1] ?? '';
+    const gradingId = card.id
+      ? (card.id.startsWith('#') ? card.id : `#${card.id}`)
+      : '';
 
     const copies = allCards
       .filter(c => c['Card Name'] === card['Card Name'])
@@ -112,6 +115,7 @@ export class RaukModal extends LitElement {
                       <span class="tag tag-lang">${lang}</span>
                       <span class="tag tag-set">${card.Set}</span>
                     </div>
+                    ${gradingId ? html`<div class="detail-id">Grading ID: <strong>${gradingId}</strong></div>` : ''}
                   </div>
                   <span class="grade-badge ${gradeClass(card.Grade)} grade-badge--lg">${card.Grade}</span>
                 </div>

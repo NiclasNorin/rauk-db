@@ -1,18 +1,41 @@
+@use 'tokens' as t;
+
+// ─── Personality zones ───────────────────────────────────────────────────────
+
+.personality-shell {
+  position: relative;
+  overflow: hidden;
+  border: var(--border-width) solid var(--color-panel-border);
+  box-shadow: 0 4px 14px rgba(1, 78, 109, 0.07);
+}
+
 // ─── Header ───────────────────────────────────────────────────────────────────
 
 header {
-  margin-bottom: 2.5rem;
+  margin-bottom: calc(var(--base) * 5);
+
+  &.personality-header {
+    padding: calc(var(--base) * 2.8) calc(var(--base) * 2.5);
+    border-radius: var(--border-radius-lg);
+    background-image:
+      var(--color-panel-overlay-soft),
+      url('/src/assets/raukar-bg-balanced.svg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    border: var(--border-width) solid var(--color-panel-border);
+  }
 
   h1 {
-    font-size: 1.75rem;
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    color: var(--text);
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: var(--letter-spacing-tight);
+    color: var(--color-text);
   }
 
   .subtitle {
-    color: var(--text-muted);
-    margin-top: 0.3rem;
+    color: var(--brand-blue-text-muted);
+    margin-top: calc(var(--base) * 0.6);
     font-size: 0.875rem;
   }
 }
@@ -22,8 +45,22 @@ header {
 .controls {
   display: flex;
   flex-direction: column;
-  gap: 0.625rem;
-  margin-bottom: 1rem;
+  gap: calc(var(--base) * 1.25);
+  margin-bottom: var(--spacing-lg);
+  background: var(--color-panel-surface);
+  border: var(--border-width) solid var(--color-panel-border);
+  border-radius: var(--border-radius-md);
+  padding: calc(var(--base) * 1.5);
+
+  &.personality-controls {
+    background-image:
+      var(--color-panel-overlay-soft),
+      url('/src/assets/raukar-bg-subtle.svg');
+    border-color: var(--color-panel-border);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+  }
 }
 
 .search-wrap {
@@ -33,43 +70,56 @@ header {
 
   .search-icon {
     position: absolute;
-    left: 0.875rem;
-    width: 15px;
-    height: 15px;
-    color: var(--text-muted);
+    left: calc(var(--base) * 1.75);
+    width: calc(var(--base) * 1.875);
+    height: calc(var(--base) * 1.875);
+    color: var(--color-text-muted);
     pointer-events: none;
     flex-shrink: 0;
   }
 
   #search {
     width: 100%;
-    padding: 0.7rem 2.5rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    color: var(--text);
-    font-size: 0.9rem;
+    padding: calc(var(--base) * 1.4) calc(var(--base) * 5);
+    background: var(--color-surface-raised);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--border-radius-md);
+    color: var(--color-text);
+    font-size: var(--font-size-lg);
     outline: none;
-    transition: border-color 0.15s;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
 
-    &::placeholder { color: var(--text-muted); }
-    &:focus        { border-color: var(--accent); }
+    &::placeholder { color: var(--color-text-muted); }
+    &:hover        { border-color: var(--color-border-strong); }
+    &:focus-visible {
+      border-color: var(--color-interactive);
+      box-shadow: 0 0 0 3px var(--color-focus-ring);
+      background: var(--color-surface);
+    }
   }
 
   .clear-btn {
     position: absolute;
-    right: 0.75rem;
+    right: calc(var(--base) * 1.5);
     background: none;
     border: none;
-    color: var(--text-muted);
-    font-size: 1.2rem;
+    color: var(--color-text-muted);
+    font-size: var(--font-size-xl);
     cursor: pointer;
     opacity: 0;
-    transition: opacity 0.15s;
-    line-height: 1;
-    padding: 0.2rem;
+    transition: opacity var(--transition-fast);
+    line-height: var(--line-height-sm);
+    padding: calc(var(--base) * 0.4);
 
-    &:hover { color: var(--text); }
+    &:hover { color: var(--color-text); }
+    &:focus-visible {
+      opacity: 1;
+      color: var(--color-interactive-hover);
+      background: var(--color-highlight);
+      border-radius: var(--border-radius-sm);
+      outline: none;
+      box-shadow: 0 0 0 3px var(--color-focus-ring);
+    }
   }
 }
 
@@ -77,28 +127,33 @@ header {
 
 .filters {
   display: flex;
-  gap: 0.5rem;
+  gap: var(--spacing-xs);
   flex-wrap: wrap;
 }
 
 select {
   flex: 1;
   min-width: 140px;
-  padding: 0.6rem 2rem 0.6rem 0.875rem;
-  background: var(--surface);
-  border: 1px solid var(--border);
+  padding: calc(var(--base) * 1.2) calc(var(--base) * 4) calc(var(--base) * 1.2) calc(var(--base) * 1.75);
+  background: var(--color-surface-raised);
+  border: var(--border-width) solid var(--color-border);
   border-radius: var(--radius-sm);
-  color: var(--text);
+  color: var(--color-text);
   font-size: 0.875rem;
   outline: none;
   cursor: pointer;
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%238a8880' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 0.75rem center;
-  transition: border-color 0.15s;
+  background-position: right calc(var(--base) * 1.5) center;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
 
-  &:focus { border-color: var(--accent); }
+  &:hover { border-color: var(--color-border-strong); }
+  &:focus-visible {
+    border-color: var(--color-interactive);
+    box-shadow: 0 0 0 3px var(--color-focus-ring);
+    background: var(--color-surface);
+  }
 }
 
 // ─── Results bar ──────────────────────────────────────────────────────────────
@@ -107,24 +162,46 @@ select {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.25rem;
+  margin-bottom: calc(var(--base) * 2.5);
   font-size: 0.82rem;
-  color: var(--text-muted);
+  color: var(--color-text-muted);
+  background: var(--color-panel-surface);
+  border: var(--border-width) solid var(--color-panel-border);
+  border-radius: var(--border-radius-md);
+  padding: calc(var(--base) * 1.1) calc(var(--base) * 1.4);
+
+  &.personality-results {
+    background-image:
+      var(--color-panel-overlay-soft),
+      url('/src/assets/raukar-bg-subtle.svg');
+    border-color: var(--color-panel-border);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+  }
 }
 
 .reset-btn {
-  background: none;
-  border: 1px solid var(--border);
-  color: var(--text-muted);
-  padding: 0.3rem 0.7rem;
-  border-radius: 6px;
+  background: var(--color-surface-raised);
+  border: var(--border-width) solid var(--color-border);
+  color: var(--color-text-muted);
+  padding: calc(var(--base) * 0.6) calc(var(--base) * 1.4);
+  border-radius: calc(var(--base) * 0.75);
   font-size: 0.78rem;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all var(--transition-fast);
 
   &:hover {
-    border-color: var(--accent);
-    color: var(--accent);
+    border-color: var(--color-interactive);
+    color: var(--brand-blue-text-strong);
+    background: color-mix(in srgb, var(--brand-gold-veil-soft) 45%, white);
+  }
+
+  &:focus-visible {
+    outline: none;
+    border-color: var(--color-interactive);
+    color: var(--color-interactive-hover);
+    box-shadow: 0 0 0 3px var(--color-focus-ring);
   }
 }
 
@@ -135,16 +212,29 @@ select {
 .loading,
 .empty {
   text-align: center;
-  padding: 4rem 2rem;
-  color: var(--text-muted);
-  font-size: 0.9rem;
+  padding: calc(var(--base) * 8) calc(var(--base) * 4);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-lg);
+}
+
+.empty.personality-empty {
+  border: var(--border-width) solid var(--color-panel-border);
+  border-radius: var(--border-radius-lg);
+  box-shadow: 0 4px 14px rgba(1, 78, 109, 0.08);
+  color: var(--color-text);
+  background-image:
+    var(--color-panel-overlay-soft),
+    url('/src/assets/raukar-bg-dramatic.svg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
 }
 
 // ─── Responsive ───────────────────────────────────────────────────────────────
 
-@media (max-width: 600px) {
-  body     { padding: 1.25rem 1rem; }
-  h1       { font-size: 1.4rem; }
+@media (max-width: t.$breakpoint-md) {
+  body     { padding: calc(var(--base) * 2.5) var(--spacing-lg); }
+  h1       { font-size: var(--font-size-2xl); }
   .filters { flex-direction: column; }
   select   { min-width: 0; }
 }

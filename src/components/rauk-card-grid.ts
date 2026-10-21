@@ -28,7 +28,7 @@ export class RaukCardGrid extends LitElement {
 
   override render() {
     if (!this.cards.length) {
-      return html`<div class="empty">No cards match your filters.</div>`;
+      return html`<div class="empty personality-empty bg-raukar-dramatic">No cards match your filters.</div>`;
     }
 
     return html`

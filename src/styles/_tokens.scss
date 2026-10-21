@@ -1,10 +1,236 @@
+$breakpoint-sm: 520px;
+$breakpoint-md: 600px;
+$breakpoint-lg: 960px;
+$breakpoint-xl: 1280px;
+
 :root {
-  --bg:         #eeede8;
-  --surface:    #f8f7f4;
-  --border:     #d8d6d0;
-  --text:       #1c1b18;
-  --text-muted: #8a8880;
-  --accent:     #2c5282;
-  --radius:     10px;
-  --radius-sm:  7px;
+  /* Base scale */
+  --base: 8px;
+
+  /* Primitive palette */
+  --stone-100: #eeede8;
+  --stone-50: #f8f7f4;
+  --stone-200: #d8d6d0;
+  --stone-300: #b8b6b0;
+  --stone-600: #8a8880;
+  --stone-900: #1c1b18;
+
+  --brand-primary-600: #0681AE;
+  --brand-primary-800: #014E6D;
+  --brand-warm-400: #F8D44A;
+  --brand-warm-500: #FEC14B;
+
+  --blue-700: #2c5282;
+  --blue-100: #e8ecf4;
+  --blue-200: #c8d0e8;
+  --blue-800: #3a4a70;
+
+  --green-100: #e4f0e8;
+  --green-700: #2a5e38;
+
+  --gold-100: #f5f0e4;
+  --gold-700: #7a6020;
+
+  --grade-10-bg: #e4f7ee;
+  --grade-10-text: #126044;
+  --grade-10-border: #8bd3b3;
+
+  --grade-9-bg: #e4f7ee;
+  --grade-9-text: #126044;
+  --grade-9-border: #8bd3b3;
+
+  --grade-8-bg: #e4f7ee;
+  --grade-8-text: #126044;
+  --grade-8-border: #8bd3b3;
+
+  --grade-7-bg: #fff3df;
+  --grade-7-text: #8a5a18;
+  --grade-7-border: #e8c68f;
+
+  --grade-low-bg: #fcefed;
+  --grade-low-text: #9b3d32;
+  --grade-low-border: #e5bbb5;
+
+  --grade-ce-bg: #f2eff8;
+  --grade-ce-text: #624a86;
+  --grade-ce-border: #cdbfe1;
+
+  /* Semantic colors */
+  --color-background: var(--stone-100);
+  --color-surface: var(--stone-50);
+  --color-surface-raised: #fdfcf9;
+  --color-surface-emphasis: #edf6fb;
+  --color-border: var(--stone-200);
+  --color-border-strong: #9db6c4;
+  --color-text: var(--stone-900);
+  --color-text-muted: var(--stone-600);
+  --color-accent: var(--brand-primary-600);
+  --color-interactive: var(--brand-primary-600);
+  --color-interactive-hover: var(--brand-primary-800);
+  --color-active: var(--brand-primary-800);
+  --color-focus-ring: rgba(6, 129, 174, 0.24);
+  --color-highlight: var(--brand-warm-400);
+  --color-highlight-strong: var(--brand-warm-500);
+  --color-highlight-text: var(--brand-primary-800);
+  --color-overlay: rgba(28, 27, 24, 0.4);
+  --color-shadow: rgba(0, 0, 0, 0.065);
+  --color-shadow-strong: rgba(0, 0, 0, 0.11);
+  --color-row-current: #fff3c5;
+  --color-row-current-hover: #ffe9a7;
+
+  /* Brand role tiers (logo-true blue/gold semantics) */
+  --brand-blue-veil-soft: color-mix(in srgb, var(--brand-primary-600) 10%, white);
+  --brand-blue-veil-medium: color-mix(in srgb, var(--brand-primary-600) 18%, white);
+  --brand-blue-border-soft: color-mix(in srgb, var(--brand-primary-800) 22%, white);
+  --brand-blue-border-strong: color-mix(in srgb, var(--brand-primary-800) 38%, white);
+  --brand-blue-text-strong: color-mix(in srgb, var(--brand-primary-800) 90%, var(--color-text));
+  --brand-blue-text-muted: color-mix(in srgb, var(--brand-primary-800) 70%, var(--color-text-muted));
+
+  --brand-gold-veil-soft: color-mix(in srgb, var(--brand-warm-400) 24%, white);
+  --brand-gold-veil-medium: color-mix(in srgb, var(--brand-warm-500) 40%, white);
+  --brand-gold-border: color-mix(in srgb, var(--brand-warm-500) 60%, white);
+  --brand-gold-text: color-mix(in srgb, var(--brand-primary-800) 86%, var(--color-text-muted));
+
+  /* Shared panel surfaces for header/controls/results/modal */
+  --color-panel-surface: linear-gradient(160deg, color-mix(in srgb, var(--color-surface-raised) 88%, white) 0%, color-mix(in srgb, var(--brand-gold-veil-soft) 30%, white) 100%);
+  --color-panel-overlay-soft: linear-gradient(rgba(253, 252, 249, 0.9), rgba(253, 252, 249, 0.84));
+  --color-panel-border: var(--brand-blue-border-soft);
+
+  /* Card palette (logo-aligned blue/gold balance) */
+  --color-card-surface-start: var(--color-surface-raised);
+  --color-card-surface-end: color-mix(in srgb, var(--brand-gold-veil-soft) 46%, white);
+  --color-card-surface-hover-start: var(--color-surface);
+  --color-card-surface-hover-end: color-mix(in srgb, var(--brand-gold-veil-medium) 38%, white);
+  --color-card-border: var(--color-panel-border);
+  --color-card-border-hover: var(--brand-blue-border-strong);
+  --color-card-title: var(--brand-blue-text-strong);
+  --color-card-meta: var(--brand-blue-text-muted);
+  --color-card-date: color-mix(in srgb, var(--brand-primary-800) 76%, var(--color-text-muted));
+  --color-card-subgrade-bg-start: var(--brand-gold-veil-soft);
+  --color-card-subgrade-bg-end: var(--brand-gold-veil-medium);
+  --color-card-subgrade-border: var(--brand-gold-border);
+  --color-card-subgrade-label: var(--brand-gold-text);
+
+  /* Modal palette */
+  --color-modal-surface-start: color-mix(in srgb, var(--color-surface-raised) 90%, white);
+  --color-modal-surface-end: color-mix(in srgb, var(--brand-blue-veil-soft) 22%, white);
+  --color-modal-border: var(--brand-blue-border-soft);
+
+  /* Decorative motif controls (cards + modal) */
+  --motif-card-layer1-image: url('/src/assets/raukar-bg-subtle.svg');
+  --motif-card-layer1-size: 240% auto;
+  --motif-card-layer1-position: right -95px bottom -120px;
+  --motif-card-layer1-opacity: 0.13;
+  --motif-card-layer1-opacity-active: 0.17;
+
+  --motif-card-layer2-image: url('/src/assets/raukar-bg-balanced.svg');
+  --motif-card-layer2-size: 280% auto;
+  --motif-card-layer2-position: left -140px top -155px;
+  --motif-card-layer2-opacity: 0.06;
+  --motif-card-layer2-opacity-active: 0.095;
+
+  --motif-modal-image: url('/src/assets/raukar-bg-balanced.svg');
+  --motif-modal-size: 150% auto;
+  --motif-modal-position: right -220px top -190px;
+  --motif-modal-opacity: 0.05;
+
+  --color-tag-bg: #edf2fa;
+  --color-tag-text: #435776;
+  --color-tag-set-bg: #f1efe9;
+  --color-tag-set-text: #66635b;
+  --color-tag-lang-bg: #e7f3eb;
+  --color-tag-lang-text: #2c6540;
+  --color-tag-year-bg: #fff3cf;
+  --color-tag-year-text: #7b5b10;
+
+  --color-grade-10-bg: var(--grade-10-bg);
+  --color-grade-10-text: var(--grade-10-text);
+  --color-grade-10-border: var(--grade-10-border);
+  --color-grade-9-bg: var(--grade-9-bg);
+  --color-grade-9-text: var(--grade-9-text);
+  --color-grade-9-border: var(--grade-9-border);
+  --color-grade-8-bg: var(--grade-8-bg);
+  --color-grade-8-text: var(--grade-8-text);
+  --color-grade-8-border: var(--grade-8-border);
+  --color-grade-7-bg: var(--grade-7-bg);
+  --color-grade-7-text: var(--grade-7-text);
+  --color-grade-7-border: var(--grade-7-border);
+  --color-grade-low-bg: var(--grade-low-bg);
+  --color-grade-low-text: var(--grade-low-text);
+  --color-grade-low-border: var(--grade-low-border);
+  --color-grade-ce-bg: var(--grade-ce-bg);
+  --color-grade-ce-text: var(--grade-ce-text);
+  --color-grade-ce-border: var(--grade-ce-border);
+
+  /* Typography */
+  --font-family-base: system-ui, -apple-system, sans-serif;
+
+  --font-size-xs: 0.68rem;
+  --font-size-sm: 0.72rem;
+  --font-size-md: 0.85rem;
+  --font-size-lg: 0.9rem;
+  --font-size-xl: 1.2rem;
+  --font-size-2xl: 1.4rem;
+  --font-size-3xl: 1.75rem;
+
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --line-height-sm: 1;
+  --line-height-md: 1.35;
+  --line-height-lg: 1.5;
+
+  --letter-spacing-tight: -0.02em;
+  --letter-spacing-normal: 0.01em;
+  --letter-spacing-wide: 0.05em;
+  --letter-spacing-wider: 0.06em;
+
+  /* Spacing scale */
+  --spacing-xs: calc(var(--base) * 0.5);
+  --spacing-sm: var(--base);
+  --spacing-md: calc(var(--base) * 1.5);
+  --spacing-lg: calc(var(--base) * 2);
+  --spacing-xl: calc(var(--base) * 3);
+  --spacing-2xl: calc(var(--base) * 4);
+  --spacing-3xl: calc(var(--base) * 5);
+
+  /* Border / radius */
+  --border-width: 1px;
+  --border-width-thick: 1.5px;
+  --border-radius-sm: calc(var(--base) * 0.5);
+  --border-radius-md: calc(var(--base) * 0.875);
+  --border-radius-lg: calc(var(--base) * 1.25);
+  --border-radius-pill: 999px;
+
+  /* Shadows */
+  --shadow-sm: 0 2px 12px var(--color-shadow);
+  --shadow-md: 0 4px 16px var(--color-shadow-strong);
+
+  /* Motion */
+  --duration-fast: 0.15s;
+  --duration-normal: 0.3s;
+  --duration-slow: 1.4s;
+  --transition-fast: var(--duration-fast);
+  --transition-normal: var(--duration-normal);
+
+  /* Layering */
+  --z-index-modal: 100;
+
+  /* Breakpoint source of truth (for docs/runtime use) */
+  --breakpoint-sm: 520px;
+  --breakpoint-md: 600px;
+  --breakpoint-lg: 960px;
+  --breakpoint-xl: 1280px;
+
+  /* Legacy aliases (keep compatibility while consuming semantic tokens) */
+  --bg: var(--color-background);
+  --surface: var(--color-surface);
+  --border: var(--color-border);
+  --text: var(--color-text);
+  --text-muted: var(--color-text-muted);
+  --accent: var(--color-accent);
+  --radius: var(--border-radius-md);
+  --radius-sm: calc(var(--base) * 0.875);
 }

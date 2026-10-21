@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Dramatic polygon rauk frame with moon">
+  <defs>
+    <style>
+      .c1 { fill: #A4BBC4; }
+      .c2 { fill: #B1C2C9; }
+      .c3 { fill: #A0A9AD; }
+      .c4 { fill: #B1C2C9; }
+      .c5 { fill: #A0B0B7; }
+    </style>
+    <radialGradient id="moon-dramatic" cx="50%" cy="50%" r="56%">
+      <stop offset="0%" stop-color="#f8f5ec" stop-opacity="0.78"/>
+      <stop offset="70%" stop-color="#e8e1d0" stop-opacity="0.36"/>
+      <stop offset="100%" stop-color="#ddd6c3" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <circle cx="980" cy="220" r="380" fill="url(#moon-dramatic)"/>
+
+  <g opacity="0.5">
+    <polygon class="c1" points="0,60 170,120 0,260"/>
+    <polygon class="c2" points="0,260 170,120 240,300"/>
+    <polygon class="c5" points="0,260 240,300 0,460"/>
+    <polygon class="c1" points="0,460 240,300 190,520"/>
+    <polygon class="c2" points="0,460 190,520 0,640"/>
+    <polygon class="c5" points="0,640 190,520 255,720"/>
+    <polygon class="c1" points="0,640 255,720 0,900"/>
+    <polygon class="c2" points="0,900 255,720 205,930"/>
+    <polygon class="c5" points="0,900 205,930 0,1020"/>
+    <polygon class="c1" points="0,1020 205,930 270,1080"/>
+    <polygon class="c2" points="0,1020 270,1080 0,1080"/>
+  </g>
+
+  <g opacity="0.5">
+    <polygon class="c2" points="1920,40 1740,140 1920,300"/>
+    <polygon class="c5" points="1920,300 1740,140 1660,330"/>
+    <polygon class="c1" points="1920,300 1660,330 1920,500"/>
+    <polygon class="c2" points="1920,500 1660,330 1710,570"/>
+    <polygon class="c5" points="1920,500 1710,570 1920,700"/>
+    <polygon class="c1" points="1920,700 1710,570 1645,770"/>
+    <polygon class="c2" points="1920,700 1645,770 1920,910"/>
+    <polygon class="c5" points="1920,910 1645,770 1715,970"/>
+    <polygon class="c1" points="1920,910 1715,970 1920,1040"/>
+    <polygon class="c2" points="1920,1040 1715,970 1630,1080"/>
+    <polygon class="c3" points="1920,1040 1630,1080 1920,1080"/>
+  </g>
+
+  <g opacity="0.43">
+    <polygon class="c1" points="90,1080 330,940 490,1080"/>
+    <polygon class="c2" points="330,940 590,900 490,1080"/>
+    <polygon class="c5" points="590,900 730,1080 490,1080"/>
+    <polygon class="c1" points="590,900 860,880 730,1080"/>
+    <polygon class="c2" points="860,880 980,1080 730,1080"/>
+    <polygon class="c5" points="860,880 1110,860 980,1080"/>
+    <polygon class="c1" points="1110,860 1240,1080 980,1080"/>
+    <polygon class="c2" points="1110,860 1380,910 1240,1080"/>
+    <polygon class="c5" points="1380,910 1495,1080 1240,1080"/>
+    <polygon class="c1" points="1380,910 1640,890 1495,1080"/>
+    <polygon class="c2" points="1640,890 1780,1080 1495,1080"/>
+    <polygon class="c5" points="1640,890 1840,950 1780,1080"/>
+    <polygon class="c1" points="1840,950 1920,1080 1780,1080"/>
+  </g>
+</svg>

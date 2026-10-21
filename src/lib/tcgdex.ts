@@ -34,12 +34,10 @@ export async function fetchTCGDexCard(card: Card): Promise<CardModel | null> {
 export function renderTCGDexInfo(tcg: CardModel): TemplateResult {
   const chips = [
     tcg.rarity ? html`<span class="tcg-chip">${tcg.rarity}</span>`   : null,
-    ...(tcg.types?.map(t => html`<span class="tcg-chip tcg-chip--type">${t}</span>`) ?? []),
   ].filter(Boolean);
 
   return html`
     <div class="tcg-info">
-      ${tcg.description ? html`<p class="tcg-description">${tcg.description}</p>` : ''}
       ${chips.length    ? html`<div class="tcg-chips">${chips}</div>`              : ''}
       ${tcg.illustrator ? html`<p class="tcg-illustrator">Illustrated by ${tcg.illustrator}</p>` : ''}
     </div>

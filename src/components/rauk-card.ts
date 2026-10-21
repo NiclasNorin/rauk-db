@@ -9,6 +9,14 @@ export class RaukCard extends LitElement {
 
   @property({ type: Object }) card!: Card;
 
+  private isPerfectSubgrades(card: Card): boolean {
+    const values = [card.Center, card.Edges, card.Surface, card.Corners];
+    return values.every(v => {
+      const n = parseFloat(v);
+      return !Number.isNaN(n) && n === 10;
+    });
+  }
+
   private subGrade(label: string, value: string) {
     const display = value && value !== '-' ? value : '—';
     return html`
@@ -23,9 +31,10 @@ export class RaukCard extends LitElement {
     const { card } = this;
     const lang  = getLanguage(card.Game);
     const year  = card.Game.match(/\b(\d{4})\b/)?.[1] ?? '';
+    const isPremium = this.isPerfectSubgrades(card);
 
     return html`
-      <article class="card" data-id=${card.id}>
+      <article class="card ${isPremium ? 'card--premium' : ''}" data-id=${card.id}>
         <div class="card-header">
           <span class="card-id">#${card.id}</span>
           <span class="grade-badge ${gradeClass(card.Grade)}">${card.Grade}</span>

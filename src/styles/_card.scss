@@ -3,26 +3,79 @@
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-  gap: 0.875rem;
+  gap: calc(var(--base) * 1.75);
 }
 
 // ─── Card ─────────────────────────────────────────────────────────────────────
 
 .card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1.1rem;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: linear-gradient(160deg, var(--color-card-surface-start) 0%, var(--color-card-surface-end) 100%);
+  border: var(--border-width) solid var(--color-card-border);
+  border-radius: var(--border-radius-md);
+  padding: calc(var(--base) * 2.25);
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: calc(var(--base) * 1.3);
   cursor: pointer;
-  transition: box-shadow 0.15s, border-color 0.15s;
+  transition: box-shadow var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast), background var(--transition-fast);
   height: 100%;
+  box-shadow: 0 2px 8px rgba(1, 78, 109, 0.04);
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: var(--motif-card-layer1-image);
+    background-repeat: no-repeat;
+    background-size: var(--motif-card-layer1-size);
+    background-position: var(--motif-card-layer1-position);
+    opacity: var(--motif-card-layer1-opacity);
+    pointer-events: none;
+    z-index: 0;
+    transition: opacity var(--transition-fast);
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: var(--motif-card-layer2-image);
+    background-repeat: no-repeat;
+    background-size: var(--motif-card-layer2-size);
+    background-position: var(--motif-card-layer2-position);
+    opacity: var(--motif-card-layer2-opacity);
+    pointer-events: none;
+    z-index: 0;
+    transition: opacity var(--transition-fast);
+  }
+
+  > * {
+    position: relative;
+    z-index: 1;
+  }
 
   &:hover {
-    border-color: #b8b6b0;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+    border-color: var(--color-card-border-hover);
+    box-shadow: 0 8px 22px rgba(1, 78, 109, 0.12);
+    transform: translateY(-2px);
+    background: linear-gradient(160deg, var(--color-card-surface-hover-start) 0%, var(--color-card-surface-hover-end) 100%);
+    &::before { opacity: var(--motif-card-layer1-opacity-active); }
+    &::after { opacity: var(--motif-card-layer2-opacity-active); }
+
+    .sub-grade {
+      border-color: var(--color-border-strong);
+    }
+  }
+
+  &:focus-visible {
+    outline: none;
+    border-color: var(--color-interactive);
+    box-shadow: 0 0 0 3px var(--color-focus-ring), var(--shadow-md);
+    &::before { opacity: var(--motif-card-layer1-opacity-active); }
+    &::after { opacity: var(--motif-card-layer2-opacity-active); }
   }
 }
 
@@ -30,73 +83,93 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin: calc(var(--base) * -0.1) calc(var(--base) * -0.1) 0;
+  padding: calc(var(--base) * 0.35) calc(var(--base) * 0.55);
 }
 
 .card-id {
-  font-size: 0.72rem;
-  color: var(--text-muted);
+  font-size: 0.74rem;
+  color: var(--color-card-meta);
   font-variant-numeric: tabular-nums;
+  letter-spacing: var(--letter-spacing-normal);
+  font-weight: var(--font-weight-medium);
 }
 
 .card-name {
-  font-size: 0.9rem;
-  font-weight: 600;
-  line-height: 1.35;
-  color: var(--text);
+  font-size: 0.98rem;
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-md);
+  letter-spacing: var(--letter-spacing-tight);
+  color: var(--color-card-title);
 }
 
 .card-meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.3rem;
+  gap: calc(var(--base) * 0.5);
+  margin-top: calc(var(--base) * 0.38);
 }
 
 .card-date {
-  font-size: 0.7rem;
-  color: var(--text-muted);
+  font-size: 0.74rem;
+  color: var(--color-card-date);
   margin-top: auto;
-  padding-top: 0.2rem;
+  align-self: flex-start;
+  padding-top: calc(var(--base) * 0.6);
 }
 
 // ─── Grade badge ──────────────────────────────────────────────────────────────
 
 .grade-badge {
-  font-size: 0.78rem;
-  font-weight: 600;
-  padding: 0.18rem 0.5rem;
-  border-radius: 5px;
-  letter-spacing: 0.01em;
+  font-size: 0.86rem;
+  font-weight: var(--font-weight-semibold);
+  padding: calc(var(--base) * 0.45) calc(var(--base) * 0.95);
+  border-radius: calc(var(--base) * 0.625);
+  letter-spacing: var(--letter-spacing-normal);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.52), 0 1px 4px rgba(1, 78, 109, 0.08);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
 
   &--lg {
     font-size: 1.1rem;
-    padding: 0.35rem 0.75rem;
+    padding: calc(var(--base) * 0.7) calc(var(--base) * 1.5);
     flex-shrink: 0;
   }
 }
 
-.grade-10  { background: #fef3c7; color: #92610a;  border: 1px solid #f6d86a; }
-.grade-9   { background: #ecf5ec; color: #2d6a2d;  border: 1px solid #c0dbc0; }
-.grade-8   { background: #e8f0f8; color: #2c5282;  border: 1px solid #b8cfe8; }
-.grade-7   { background: #fdf3e3; color: #8a5a0a;  border: 1px solid #e8cc96; }
-.grade-low { background: #fdf0ee; color: #9b3a2a;  border: 1px solid #e8bdb8; }
-.grade-ce  { background: #f3eefc; color: #5a3a8a;  border: 1px solid #cebef0; }
+.grade-10  { background: var(--color-grade-10-bg);  color: var(--color-grade-10-text);  border: var(--border-width) solid var(--color-grade-10-border); }
+.grade-9   { background: var(--color-grade-9-bg);   color: var(--color-grade-9-text);   border: var(--border-width) solid var(--color-grade-9-border); }
+.grade-8   { background: var(--color-grade-8-bg);   color: var(--color-grade-8-text);   border: var(--border-width) solid var(--color-grade-8-border); }
+.grade-7   { background: var(--color-grade-7-bg);   color: var(--color-grade-7-text);   border: var(--border-width) solid var(--color-grade-7-border); }
+.grade-low { background: var(--color-grade-low-bg); color: var(--color-grade-low-text); border: var(--border-width) solid var(--color-grade-low-border); }
+.grade-ce  { background: var(--color-grade-ce-bg);  color: var(--color-grade-ce-text);  border: var(--border-width) solid var(--color-grade-ce-border); }
+
+.card:hover .grade-badge {
+  transform: translateY(-1px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.58), 0 4px 9px rgba(1, 78, 109, 0.14);
+}
 
 // ─── Tags ─────────────────────────────────────────────────────────────────────
 
 .tag {
-  font-size: 0.68rem;
-  background: #e8ecf4;
-  color: #4a5a7a;
-  padding: 0.18rem 0.45rem;
-  border-radius: 4px;
+  font-size: var(--font-size-xs);
+  background: var(--color-tag-set-bg);
+  color: var(--color-tag-set-text);
+  border: var(--border-width) solid color-mix(in srgb, var(--color-tag-set-text) 16%, white);
+  padding: calc(var(--base) * 0.36) calc(var(--base) * 0.9);
+  border-radius: var(--border-radius-sm);
+  font-weight: var(--font-weight-medium);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
 
-  &-set  { background: #ebebeb; color: var(--text-muted); }
-  &-lang { background: #e4f0e8; color: #2a5e38; }
-  &-year { background: #f5f0e4; color: #7a6020; }
+  &-set,
+  &-lang,
+  &-year {
+    background: var(--color-tag-set-bg);
+    color: var(--color-tag-set-text);
+    border-color: color-mix(in srgb, var(--color-tag-set-text) 16%, white);
+  }
 }
 
 // ─── Sub-grades ───────────────────────────────────────────────────────────────
@@ -104,49 +177,144 @@
 .sub-grades {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 0.3rem;
-  margin-top: 0.2rem;
+  gap: calc(var(--base) * 0.6);
+  margin-top: calc(var(--base) * 0.75);
 }
 
 .sub-grade {
-  background: var(--bg);
-  border-radius: 5px;
-  padding: 0.35rem 0.2rem;
+  background: linear-gradient(165deg, var(--color-card-subgrade-bg-start) 0%, var(--color-card-subgrade-bg-end) 100%);
+  border: var(--border-width) solid var(--color-card-subgrade-border);
+  border-radius: calc(var(--base) * 0.625);
+  padding: calc(var(--base) * 0.74) calc(var(--base) * 0.42);
   text-align: center;
   display: flex;
   flex-direction: column;
-  gap: 0.12rem;
+  gap: calc(var(--base) * 0.24);
+  transition: border-color var(--transition-fast), background var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45);
 }
 
 .sub-label {
-  font-size: 0.58rem;
-  color: var(--text-muted);
+  font-size: 0.62rem;
+  color: var(--color-card-subgrade-label);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: var(--letter-spacing-wide);
 }
 
 .sub-val {
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--text);
+  font-size: 0.8rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-highlight-text);
   font-variant-numeric: tabular-nums;
+}
+
+.card:hover .sub-grade {
+  transform: translateY(-1px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.52), 0 3px 8px rgba(126, 96, 32, 0.12);
+}
+
+.card:not(.card--premium) .sub-grade {
+  background: linear-gradient(
+    165deg,
+    color-mix(in srgb, var(--color-card-title) 12%, white) 0%,
+    color-mix(in srgb, var(--brand-primary-600) 22%, white) 100%
+  );
+  border-color: color-mix(in srgb, var(--brand-primary-800) 34%, white);
+}
+
+.card:not(.card--premium) .sub-label {
+  color: color-mix(in srgb, var(--brand-primary-800) 82%, var(--color-text-muted));
+}
+
+.card:not(.card--premium) .sub-val {
+  color: var(--color-card-title);
+}
+
+.card:not(.card--premium):hover .sub-grade {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.52), 0 3px 8px rgba(1, 78, 109, 0.16);
+}
+
+.card--premium .sub-grade {
+  background: linear-gradient(165deg, #1f1a11 0%, #120f0a 100%);
+  border-color: color-mix(in srgb, var(--brand-warm-500) 75%, #3b2a00);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 1px 6px rgba(18, 15, 10, 0.28);
+}
+
+.card--premium .sub-label {
+  color: color-mix(in srgb, var(--brand-warm-400) 78%, #f6e2a7);
+}
+
+.card--premium .sub-val {
+  color: color-mix(in srgb, var(--brand-warm-500) 88%, #fff1b5);
+  text-shadow: 0 0 10px rgba(248, 212, 74, 0.18);
+}
+
+.card--premium:hover .sub-grade {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 4px 12px rgba(18, 15, 10, 0.36),
+    0 0 0 1px rgba(254, 193, 75, 0.2);
+}
+
+.card--premium .card-header .grade-badge {
+  background: linear-gradient(165deg, #1f1a11 0%, #120f0a 100%);
+  color: color-mix(in srgb, var(--brand-warm-500) 90%, #fff2bf);
+  border-color: color-mix(in srgb, var(--brand-warm-500) 78%, #3b2a00);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 2px 8px rgba(18, 15, 10, 0.32);
+  text-shadow: 0 0 10px rgba(248, 212, 74, 0.18);
+}
+
+.card--premium:hover .card-header .grade-badge {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 5px 12px rgba(18, 15, 10, 0.4),
+    0 0 0 1px rgba(254, 193, 75, 0.18);
 }
 
 // ─── Load more ────────────────────────────────────────────────────────────────
 
 .load-more {
   grid-column: 1 / -1;
-  padding: 0.7rem;
-  background: var(--surface);
-  border: 1px dashed var(--border);
-  border-radius: var(--radius);
-  color: var(--text-muted);
-  font-size: 0.85rem;
+  padding: calc(var(--base) * 1.4);
+  background: var(--color-surface-emphasis);
+  border: var(--border-width) dashed var(--color-border-strong);
+  border-radius: var(--border-radius-md);
+  color: var(--color-interactive-hover);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all var(--transition-fast), box-shadow var(--transition-fast);
 
   &:hover {
-    border-color: var(--accent);
-    color: var(--accent);
+    border-color: var(--color-interactive);
+    color: var(--color-interactive-hover);
+    background: var(--color-highlight);
+  }
+
+  &:focus-visible {
+    outline: none;
+    border-color: var(--color-interactive);
+    box-shadow: 0 0 0 3px var(--color-focus-ring);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .card::before,
+  .card::after,
+  .grade-badge,
+  .sub-grade,
+  .load-more {
+    transition-duration: 0s !important;
+    animation-duration: 0s !important;
+  }
+
+  .card:hover,
+  .card:hover .grade-badge {
+    transform: none;
   }
 }

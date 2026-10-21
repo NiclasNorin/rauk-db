@@ -96,7 +96,7 @@ export class RaukFilterBar extends LitElement {
 
   override render() {
     return html`
-      <div class="controls">
+      <div class="controls personality-shell personality-controls bg-raukar-subtle">
         <div class="search-wrap">
           <svg class="search-icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" stroke-width="1.5"/>
@@ -105,7 +105,7 @@ export class RaukFilterBar extends LitElement {
           <input
             id="search"
             type="text"
-            placeholder="Search by name or set…"
+            placeholder="Search by name, set, or ID…"
             autocomplete="off"
             .value=${this.inputValue}
             @input=${this.onSearchInput}

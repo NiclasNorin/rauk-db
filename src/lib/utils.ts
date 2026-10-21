@@ -1,3 +1,5 @@
+import type { Card } from './types';
+
 export function getLanguage(game: string): string {
   const match = game.match(/\b(English|Japanese|Korean|Chinese|German|French|Italian|Spanish|Portuguese)\b/i);
   return match ? match[1] : 'Other';
@@ -16,7 +18,7 @@ export function gradeClass(grade: string): string {
   if (n === 10) return 'grade-10';
   if (n >= 9)  return 'grade-9';
   if (n >= 8)  return 'grade-8';
-  if (n >= 7)  return 'grade-7';
+  if (n >= 5)  return 'grade-7';
   return 'grade-low';
 }
 
@@ -24,6 +26,36 @@ export function gradeNumeric(grade: string): number {
   if (grade === 'CE') return -1;
   const n = parseFloat(grade);
   return isNaN(n) ? -2 : n;
+}
+
+function subgradeNumeric(value: string): number {
+  const n = parseFloat(value);
+  return Number.isNaN(n) ? -1 : n;
+}
+
+function normalizedSubgrades(card: Card): number[] {
+  return [card.Center, card.Edges, card.Surface, card.Corners]
+    .map(subgradeNumeric)
+    .sort((a, b) => b - a);
+}
+
+export function compareCardsByGradeAndSubgrades(a: Card, b: Card, ascending = false): number {
+  const gradeDiff = ascending
+    ? gradeNumeric(a.Grade) - gradeNumeric(b.Grade)
+    : gradeNumeric(b.Grade) - gradeNumeric(a.Grade);
+
+  if (gradeDiff !== 0) return gradeDiff;
+
+  const aSubs = normalizedSubgrades(a);
+  const bSubs = normalizedSubgrades(b);
+
+  for (let i = 0; i < aSubs.length; i++) {
+    if (aSubs[i] !== bSubs[i]) {
+      return ascending ? aSubs[i] - bSubs[i] : bSubs[i] - aSubs[i];
+    }
+  }
+
+  return a.id.localeCompare(b.id);
 }
 
 export function formatDate(raw: string): string {
