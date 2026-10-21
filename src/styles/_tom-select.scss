@@ -3,10 +3,19 @@
 }
 
 .ts-wrapper {
-  flex: 1;
-  min-width: 160px;
+  width: 100%;
+  min-width: 0;
+  position: relative;
+  z-index: 2;
 
   .ts-control {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0;
+    min-height: 42px;
+    width: 100%;
+    box-sizing: border-box;
     background: var(--color-surface-raised);
     border: var(--border-width) solid var(--color-border);
     border-radius: var(--radius-sm);
@@ -22,9 +31,79 @@
     }
 
     input {
+      flex: 1 1 auto;
+      min-width: 72px !important;
+      width: auto !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      border: 0 !important;
+      line-height: 1.1;
       color: var(--color-text);
       &::placeholder { color: var(--color-text-muted); }
     }
+  }
+
+  &.multi {
+    .ts-control {
+      gap: calc(var(--base) * 0.7);
+      padding-top: calc(var(--base) * 0.95);
+      padding-bottom: calc(var(--base) * 0.95);
+    }
+
+    .ts-control > .item {
+      display: inline-flex;
+      align-items: center;
+      gap: calc(var(--base) * 0.4);
+      margin: 0;
+      padding: calc(var(--base) * 0.45) calc(var(--base) * 0.45) calc(var(--base) * 0.45) calc(var(--base) * 0.8);
+      border-radius: calc(var(--base) * 0.75);
+      background: var(--color-highlight);
+      border: var(--border-width) solid color-mix(in srgb, var(--color-interactive) 30%, transparent);
+      color: var(--color-interactive-hover);
+      line-height: 1.2;
+      max-width: 100%;
+    }
+
+    .remove {
+      display: inline-flex;
+      align-self: stretch;
+      align-items: center;
+      justify-content: center;
+      min-width: calc(var(--base) * 1.8);
+      margin-left: calc(var(--base) * 0.35);
+      padding: 0 calc(var(--base) * 0.45);
+      border-left: var(--border-width) solid color-mix(in srgb, var(--color-interactive) 30%, transparent);
+      border-radius: 0 calc(var(--base) * 0.75) calc(var(--base) * 0.75) 0;
+      font-size: 0.85rem;
+      line-height: 1;
+      color: inherit;
+      text-decoration: none;
+      opacity: 0.8;
+
+      &:hover {
+        opacity: 1;
+        background: color-mix(in srgb, var(--color-interactive) 12%, transparent);
+      }
+    }
+
+    &.plugin-remove_button .item .remove {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+  }
+
+  &.single .ts-control .item {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &.single.input-active .ts-control > .item {
+    color: var(--color-text-muted);
   }
 
   &.focus .ts-control {
@@ -41,8 +120,13 @@
   box-shadow: var(--shadow-md);
   color: var(--color-text);
   font-size: 0.875rem;
+  z-index: 40;
 
   .ts-dropdown-content { max-height: 240px; }
+
+  .option[data-value=''] {
+    display: none;
+  }
 
   .option {
     padding: var(--spacing-xs) calc(var(--base) * 1.75);

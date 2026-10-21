@@ -17,7 +17,7 @@ export interface Card {
 export interface FilterState {
   query: string;
   language: string;
-  set: string;
+  sets: string[];
   grade: string;
   sort: string;
 }
@@ -25,7 +25,7 @@ export interface FilterState {
 export const DEFAULT_FILTERS: FilterState = {
   query: '',
   language: '',
-  set: '',
+  sets: [],
   grade: '',
   sort: 'date-desc',
 };

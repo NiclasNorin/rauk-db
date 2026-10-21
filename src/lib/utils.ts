@@ -1,4 +1,5 @@
 import type { Card } from './types';
+import { localeToDateLocale, type Locale } from './i18n';
 
 export function getLanguage(game: string): string {
   const match = game.match(/\b(English|Japanese|Korean|Chinese|German|French|Italian|Spanish|Portuguese)\b/i);
@@ -58,9 +59,9 @@ export function compareCardsByGradeAndSubgrades(a: Card, b: Card, ascending = fa
   return a.id.localeCompare(b.id);
 }
 
-export function formatDate(raw: string): string {
+export function formatDate(raw: string, locale: Locale = 'sv'): string {
   if (!raw) return '—';
   const d = new Date(raw);
   if (isNaN(d.getTime())) return raw;
-  return d.toLocaleDateString('sv-SE', { year: 'numeric', month: 'short', day: 'numeric' });
+  return d.toLocaleDateString(localeToDateLocale(locale), { year: 'numeric', month: 'short', day: 'numeric' });
 }

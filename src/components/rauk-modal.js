@@ -8,10 +8,12 @@ import { LitElement, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { getLanguage, gradeClass, gradeNumeric, formatDate } from '../lib/utils';
 import { fetchTCGDexCard, renderTCGDexInfo } from '../lib/tcgdex';
+import { DEFAULT_LOCALE, localizeLanguage, t } from '../lib/i18n';
 let RaukModal = class RaukModal extends LitElement {
     constructor() {
         super(...arguments);
         this.allCards = [];
+        this.locale = DEFAULT_LOCALE;
         this.tcgCard = null;
         this.tcgLoading = true;
         this.imgError = false;
@@ -62,12 +64,12 @@ let RaukModal = class RaukModal extends LitElement {
         if (this.tcgLoading)
             return html `<div class="tcgdex-skeleton"></div>`;
         if (!this.tcgCard || this.imgError)
-            return html `<p class="tcgdex-no-img">No image found</p>`;
+            return html `<p class="tcgdex-no-img">${t(this.locale, 'modal.noImageFound')}</p>`;
         return html `
       <img
         class="tcgdex-img"
         src=${this.tcgCard.getImageURL('high', 'webp')}
-        alt=${this.tcgCard.name ?? 'Card image'}
+        alt=${this.tcgCard.name ?? t(this.locale, 'modal.cardImageAlt')}
         loading="lazy"
         @error=${() => { this.imgError = true; }}
       />
@@ -75,7 +77,7 @@ let RaukModal = class RaukModal extends LitElement {
     }
     render() {
         const { card, allCards } = this;
-        const lang = getLanguage(card.Game);
+        const lang = localizeLanguage(this.locale, getLanguage(card.Game));
         const year = card.Game.match(/\b(\d{4})\b/)?.[1] ?? '';
         const gradingId = card.id
             ? (card.id.startsWith('#') ? card.id : `#${card.id}`)
@@ -89,7 +91,7 @@ let RaukModal = class RaukModal extends LitElement {
         return html `
       <div class="modal-overlay" @click=${this.onOverlayClick} role="dialog" aria-modal="true">
         <div class="modal">
-          <button class="modal-close" @click=${this.close} aria-label="Close">×</button>
+          <button class="modal-close" @click=${this.close} aria-label=${t(this.locale, 'modal.close')}>×</button>
           <div id="modal-content">
 
             <div class="modal-body">
@@ -105,27 +107,27 @@ let RaukModal = class RaukModal extends LitElement {
                       <span class="tag tag-lang">${lang}</span>
                       <span class="tag tag-set">${card.Set}</span>
                     </div>
-                    ${gradingId ? html `<div class="detail-id">Grading ID: <strong>${gradingId}</strong></div>` : ''}
+                    ${gradingId ? html `<div class="detail-id">${t(this.locale, 'modal.gradingId')}: <strong>${gradingId}</strong></div>` : ''}
                   </div>
                   <span class="grade-badge ${gradeClass(card.Grade)} grade-badge--lg">${card.Grade}</span>
                 </div>
                 <div class="detail-subgrades">
-                  ${this.subGradeRow('Center', card.Center)}
-                  ${this.subGradeRow('Edges', card.Edges)}
-                  ${this.subGradeRow('Surface', card.Surface)}
-                  ${this.subGradeRow('Corners', card.Corners)}
+                  ${this.subGradeRow(t(this.locale, 'modal.center'), card.Center)}
+                  ${this.subGradeRow(t(this.locale, 'modal.edges'), card.Edges)}
+                  ${this.subGradeRow(t(this.locale, 'modal.surface'), card.Surface)}
+                  ${this.subGradeRow(t(this.locale, 'modal.corners'), card.Corners)}
                 </div>
                 ${this.tcgLoading
             ? html `<div class="tcgdex-skeleton tcgdex-skeleton--text"></div>`
-            : this.tcgCard ? renderTCGDexInfo(this.tcgCard) : ''}
+            : this.tcgCard ? renderTCGDexInfo(this.tcgCard, this.locale) : ''}
               </div>
             </div>
 
             <div class="detail-section">
-              <h3 class="detail-section-title">Grade distribution</h3>
+              <h3 class="detail-section-title">${t(this.locale, 'modal.gradeDistribution')}</h3>
               <div class="table-wrap">
                 <table class="grade-table">
-                  <thead><tr><th>Grade</th><th>Cards</th></tr></thead>
+                  <thead><tr><th>${t(this.locale, 'modal.grade')}</th><th>${t(this.locale, 'modal.cards')}</th></tr></thead>
                   <tbody>
                     ${distEntries.map(([grade, count]) => html `
                       <tr>
@@ -140,13 +142,21 @@ let RaukModal = class RaukModal extends LitElement {
 
             <div class="detail-section">
               <h3 class="detail-section-title">
-                All gradings of this card
+                ${t(this.locale, 'modal.allGradingsOfCard')}
                 <span class="detail-count">${copies.length}</span>
               </h3>
               <div class="table-wrap">
                 <table class="grade-table">
                   <thead>
-                    <tr><th>Grade</th><th>Ctr</th><th>Edg</th><th>Sur</th><th>Cor</th><th>Set</th><th>Date</th></tr>
+                    <tr>
+                      <th>${t(this.locale, 'modal.grade')}</th>
+                      <th>${t(this.locale, 'card.ctr')}</th>
+                      <th>${t(this.locale, 'card.edg')}</th>
+                      <th>${t(this.locale, 'card.sur')}</th>
+                      <th>${t(this.locale, 'card.cor')}</th>
+                      <th>${t(this.locale, 'modal.set')}</th>
+                      <th>${t(this.locale, 'modal.date')}</th>
+                    </tr>
                   </thead>
                   <tbody>
                     ${copies.map(c => html `
@@ -157,7 +167,7 @@ let RaukModal = class RaukModal extends LitElement {
                         <td>${c.Surface && c.Surface !== '-' ? c.Surface : '—'}</td>
                         <td>${c.Corners && c.Corners !== '-' ? c.Corners : '—'}</td>
                         <td>${c.Set}</td>
-                        <td>${formatDate(c['Date Graded'])}</td>
+                        <td>${formatDate(c['Date Graded'], this.locale)}</td>
                       </tr>
                     `)}
                   </tbody>
@@ -177,6 +187,9 @@ __decorate([
 __decorate([
     property({ type: Array })
 ], RaukModal.prototype, "allCards", void 0);
+__decorate([
+    property({ type: String })
+], RaukModal.prototype, "locale", void 0);
 __decorate([
     state()
 ], RaukModal.prototype, "tcgCard", void 0);

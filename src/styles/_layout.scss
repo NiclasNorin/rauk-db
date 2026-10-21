@@ -11,6 +11,74 @@
 
 // ─── Header ───────────────────────────────────────────────────────────────────
 
+.locale-switch {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: calc(var(--base) * 0.9);
+  margin-bottom: calc(var(--base) * 1.1);
+
+  .locale-btn {
+    appearance: none;
+    -webkit-appearance: none;
+    border: 0;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    line-height: 0;
+    opacity: 0.5;
+    filter: saturate(0.72);
+    transform: scale(1);
+    transition:
+      transform var(--transition-fast),
+      opacity var(--transition-fast),
+      filter var(--transition-fast),
+      box-shadow var(--transition-fast);
+
+    .flag-icon {
+      display: block;
+      width: clamp(1.75rem, 1.55vw, 1.95rem);
+      height: auto;
+      border-radius: calc(var(--base) * 0.55);
+      border: 1px solid color-mix(in srgb, var(--color-border-strong) 45%, transparent);
+      box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.14),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.22);
+      object-fit: cover;
+    }
+
+    &:hover {
+      opacity: 0.78;
+      transform: translateY(-1px) scale(1.03);
+      filter: saturate(0.95);
+    }
+
+    &:focus-visible {
+      outline: none;
+      opacity: 1;
+      transform: translateY(-1px) scale(1.04);
+      filter: saturate(1);
+      border-radius: var(--border-radius-sm);
+      box-shadow: 0 0 0 3px var(--color-focus-ring);
+    }
+
+    &.is-active {
+      opacity: 1;
+      filter: saturate(1);
+      transform: scale(1.04);
+
+      .flag-icon {
+        border-color: color-mix(in srgb, var(--brand-gold-strong) 75%, var(--color-border-strong));
+        box-shadow:
+          0 0 0 3px color-mix(in srgb, var(--brand-gold-soft) 60%, transparent),
+          0 3px 10px rgba(0, 0, 0, 0.2),
+          inset 0 0 0 1px rgba(255, 255, 255, 0.26);
+      }
+    }
+  }
+}
+
 header {
   margin-bottom: calc(var(--base) * 5);
 
@@ -53,6 +121,7 @@ header {
   padding: calc(var(--base) * 1.5);
 
   &.personality-controls {
+    overflow: visible;
     background-image:
       var(--color-panel-overlay-soft),
       url('/src/assets/raukar-bg-subtle.svg');
@@ -64,9 +133,19 @@ header {
 }
 
 .search-wrap {
-  position: relative;
+  --search-control-height: calc(var(--base) * 5.125);
   display: flex;
-  align-items: center;
+  align-items: stretch;
+  gap: var(--spacing-xs);
+
+  .search-field {
+    position: relative;
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: var(--search-control-height);
+    display: flex;
+    align-items: center;
+  }
 
   .search-icon {
     position: absolute;
@@ -80,7 +159,10 @@ header {
 
   #search {
     width: 100%;
-    padding: calc(var(--base) * 1.4) calc(var(--base) * 5);
+    height: 100%;
+    min-height: var(--search-control-height);
+    box-sizing: border-box;
+    padding: calc(var(--base) * 1.4) calc(var(--base) * 5) calc(var(--base) * 1.4) calc(var(--base) * 5);
     background: var(--color-surface-raised);
     border: var(--border-width) solid var(--color-border);
     border-radius: var(--border-radius-md);
@@ -121,19 +203,81 @@ header {
       box-shadow: 0 0 0 3px var(--color-focus-ring);
     }
   }
+
+  .filter-toggle-btn {
+    flex: 0 0 auto;
+    align-self: stretch;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    height: var(--search-control-height);
+    aspect-ratio: 1 / 1;
+    min-width: 0;
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--border-radius-sm);
+    background: color-mix(in srgb, var(--color-surface-raised) 88%, white);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: border-color var(--transition-fast), background var(--transition-fast), color var(--transition-fast), box-shadow var(--transition-fast);
+
+    svg {
+      width: calc(var(--base) * 1.7);
+      height: calc(var(--base) * 1.7);
+      display: block;
+    }
+
+    &:hover {
+      border-color: var(--color-border-strong);
+      color: var(--color-text);
+      background: var(--color-surface);
+    }
+
+    &:focus-visible {
+      outline: none;
+      border-color: var(--color-interactive);
+      box-shadow: 0 0 0 3px var(--color-focus-ring);
+      color: var(--color-interactive-hover);
+    }
+
+    &.is-active {
+      border-color: var(--color-interactive);
+      background: color-mix(in srgb, var(--color-highlight) 86%, white);
+      color: var(--brand-blue-deep);
+      box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-interactive) 22%, transparent);
+    }
+  }
 }
 
 // ─── Filters ──────────────────────────────────────────────────────────────────
 
 .filters {
-  display: flex;
-  gap: var(--spacing-xs);
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--spacing-md);
+
+  &.is-collapsed {
+    display: none;
+  }
+}
+
+.filters > .ts-wrapper {
+  grid-column: 1 / -1;
+}
+
+.filters > select.ts-hidden-accessible {
+  position: absolute !important;
+  width: 0 !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  pointer-events: none;
 }
 
 select {
-  flex: 1;
-  min-width: 140px;
+  width: 100%;
+  min-width: 0;
   padding: calc(var(--base) * 1.2) calc(var(--base) * 4) calc(var(--base) * 1.2) calc(var(--base) * 1.75);
   background: var(--color-surface-raised);
   border: var(--border-width) solid var(--color-border);
@@ -203,6 +347,11 @@ select {
     color: var(--color-interactive-hover);
     box-shadow: 0 0 0 3px var(--color-focus-ring);
   }
+
+  &.is-hidden {
+    visibility: hidden;
+    pointer-events: none;
+  }
 }
 
 // ─── States ───────────────────────────────────────────────────────────────────
@@ -235,6 +384,7 @@ select {
 @media (max-width: t.$breakpoint-md) {
   body     { padding: calc(var(--base) * 2.5) var(--spacing-lg); }
   h1       { font-size: var(--font-size-2xl); }
-  .filters { flex-direction: column; }
-  select   { min-width: 0; }
+  .locale-switch { justify-content: center; }
+  .filters { grid-template-columns: 1fr; }
+  .filters > .ts-wrapper { grid-column: auto; }
 }

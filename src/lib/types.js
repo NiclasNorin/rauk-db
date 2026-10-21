@@ -3,7 +3,7 @@ export const PAGE_SIZE = 60;
 export const DEFAULT_FILTERS = {
     query: '',
     language: '',
-    set: '',
+    sets: [],
     grade: '',
     sort: 'date-desc',
 };

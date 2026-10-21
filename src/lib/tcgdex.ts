@@ -3,6 +3,7 @@ import TCGdex, { Query } from '@tcgdex/sdk';
 import type { CardModel } from '@tcgdex/sdk';
 import type { Card } from './types';
 import { extractSearchName } from './utils';
+import { type Locale, t } from './i18n';
 
 export async function fetchTCGDexCard(card: Card): Promise<CardModel | null> {
   const tcgdex = new TCGdex('en');
@@ -31,7 +32,7 @@ export async function fetchTCGDexCard(card: Card): Promise<CardModel | null> {
   }
 }
 
-export function renderTCGDexInfo(tcg: CardModel): TemplateResult {
+export function renderTCGDexInfo(tcg: CardModel, locale: Locale): TemplateResult {
   const chips = [
     tcg.rarity ? html`<span class="tcg-chip">${tcg.rarity}</span>`   : null,
   ].filter(Boolean);
@@ -39,7 +40,7 @@ export function renderTCGDexInfo(tcg: CardModel): TemplateResult {
   return html`
     <div class="tcg-info">
       ${chips.length    ? html`<div class="tcg-chips">${chips}</div>`              : ''}
-      ${tcg.illustrator ? html`<p class="tcg-illustrator">Illustrated by ${tcg.illustrator}</p>` : ''}
+      ${tcg.illustrator ? html`<p class="tcg-illustrator">${t(locale, 'tcg.illustratedBy', { name: tcg.illustrator })}</p>` : ''}
     </div>
   `;
 }

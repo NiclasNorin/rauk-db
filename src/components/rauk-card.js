@@ -7,7 +7,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import { LitElement, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { getLanguage, gradeClass, formatDate } from '../lib/utils';
+import { DEFAULT_LOCALE, localizeLanguage, t } from '../lib/i18n';
 let RaukCard = class RaukCard extends LitElement {
+    constructor() {
+        super(...arguments);
+        this.locale = DEFAULT_LOCALE;
+    }
     createRenderRoot() { return this; }
     isPerfectSubgrades(card) {
         const values = [card.Center, card.Edges, card.Surface, card.Corners];
@@ -27,7 +32,7 @@ let RaukCard = class RaukCard extends LitElement {
     }
     render() {
         const { card } = this;
-        const lang = getLanguage(card.Game);
+        const lang = localizeLanguage(this.locale, getLanguage(card.Game));
         const year = card.Game.match(/\b(\d{4})\b/)?.[1] ?? '';
         const isPremium = this.isPerfectSubgrades(card);
         return html `
@@ -43,12 +48,12 @@ let RaukCard = class RaukCard extends LitElement {
           <span class="tag tag-set">${card.Set}</span>
         </div>
         <div class="sub-grades">
-          ${this.subGrade('Ctr', card.Center)}
-          ${this.subGrade('Edg', card.Edges)}
-          ${this.subGrade('Sur', card.Surface)}
-          ${this.subGrade('Cor', card.Corners)}
+          ${this.subGrade(t(this.locale, 'card.ctr'), card.Center)}
+          ${this.subGrade(t(this.locale, 'card.edg'), card.Edges)}
+          ${this.subGrade(t(this.locale, 'card.sur'), card.Surface)}
+          ${this.subGrade(t(this.locale, 'card.cor'), card.Corners)}
         </div>
-        <div class="card-date">${formatDate(card['Date Graded'])}</div>
+        <div class="card-date">${formatDate(card['Date Graded'], this.locale)}</div>
       </article>
     `;
     }
@@ -56,6 +61,9 @@ let RaukCard = class RaukCard extends LitElement {
 __decorate([
     property({ type: Object })
 ], RaukCard.prototype, "card", void 0);
+__decorate([
+    property({ type: String })
+], RaukCard.prototype, "locale", void 0);
 RaukCard = __decorate([
     customElement('rauk-card')
 ], RaukCard);

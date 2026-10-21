@@ -1,3 +1,4 @@
+import { localeToDateLocale } from './i18n';
 export function getLanguage(game) {
     const match = game.match(/\b(English|Japanese|Korean|Chinese|German|French|Italian|Spanish|Portuguese)\b/i);
     return match ? match[1] : 'Other';
@@ -52,11 +53,11 @@ export function compareCardsByGradeAndSubgrades(a, b, ascending = false) {
     }
     return a.id.localeCompare(b.id);
 }
-export function formatDate(raw) {
+export function formatDate(raw, locale = 'sv') {
     if (!raw)
         return '—';
     const d = new Date(raw);
     if (isNaN(d.getTime()))
         return raw;
-    return d.toLocaleDateString('sv-SE', { year: 'numeric', month: 'short', day: 'numeric' });
+    return d.toLocaleDateString(localeToDateLocale(locale), { year: 'numeric', month: 'short', day: 'numeric' });
 }

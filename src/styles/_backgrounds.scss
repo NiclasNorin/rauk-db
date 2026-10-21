@@ -45,17 +45,17 @@ body.theme-raukar-dramatic::before {
 
 body.theme-raukar-subtle::before {
   background-image: url('/src/assets/raukar-bg-subtle.svg');
-  opacity: 0.62;
+  opacity: 0.9;
 }
 
 body.theme-raukar-balanced::before {
   background-image: url('/src/assets/raukar-bg-balanced.svg');
-  opacity: 0.72;
+  opacity: 0.94;
 }
 
 body.theme-raukar-dramatic::before {
   background-image: url('/src/assets/raukar-bg-dramatic.svg');
-  opacity: 0.8;
+  opacity: 0.98;
 }
 
 @media (max-width: 960px), (hover: none) and (pointer: coarse) {

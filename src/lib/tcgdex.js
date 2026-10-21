@@ -1,6 +1,7 @@
 import { html } from 'lit';
 import TCGdex, { Query } from '@tcgdex/sdk';
 import { extractSearchName } from './utils';
+import { t } from './i18n';
 export async function fetchTCGDexCard(card) {
     const tcgdex = new TCGdex('en');
     const searchName = extractSearchName(card['Card Name']);
@@ -19,14 +20,14 @@ export async function fetchTCGDexCard(card) {
         return null;
     }
 }
-export function renderTCGDexInfo(tcg) {
+export function renderTCGDexInfo(tcg, locale) {
     const chips = [
         tcg.rarity ? html `<span class="tcg-chip">${tcg.rarity}</span>` : null,
     ].filter(Boolean);
     return html `
     <div class="tcg-info">
       ${chips.length ? html `<div class="tcg-chips">${chips}</div>` : ''}
-      ${tcg.illustrator ? html `<p class="tcg-illustrator">Illustrated by ${tcg.illustrator}</p>` : ''}
+      ${tcg.illustrator ? html `<p class="tcg-illustrator">${t(locale, 'tcg.illustratedBy', { name: tcg.illustrator })}</p>` : ''}
     </div>
   `;
 }

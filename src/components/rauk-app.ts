@@ -3,6 +3,9 @@ import { customElement, state } from 'lit/decorators.js';
 import { API_URL, PAGE_SIZE, DEFAULT_FILTERS } from '../lib/types';
 import type { Card, FilterState } from '../lib/types';
 import { getLanguage, gradeNumeric, compareCardsByGradeAndSubgrades } from '../lib/utils';
+import { DEFAULT_LOCALE, cardCountLabel, t, type Locale } from '../lib/i18n';
+import gbFlag from '../assets/flags/gb.svg';
+import seFlag from '../assets/flags/se.svg';
 import './rauk-filter-bar';
 import './rauk-card-grid';
 import './rauk-modal';
@@ -11,6 +14,8 @@ import './rauk-modal';
 export class RaukApp extends LitElement {
   override createRenderRoot() { return this; }
 
+  private static readonly LOCALE_STORAGE_KEY = 'rauk-locale';
+
   @state() private allCards: Card[] = [];
   @state() private filteredCards: Card[] = [];
   @state() private visibleCount = PAGE_SIZE;
@@ -18,12 +23,29 @@ export class RaukApp extends LitElement {
   @state() private filters: FilterState = { ...DEFAULT_FILTERS };
   @state() private loading = true;
   @state() private error = '';
+  @state() private locale: Locale = DEFAULT_LOCALE;
 
   override async connectedCallback(): Promise<void> {
     super.connectedCallback();
+    this.initializeLocale();
     document.body.classList.remove('theme-raukar-subtle', 'theme-raukar-dramatic');
     document.body.classList.add('theme-raukar-balanced');
     await this.loadData();
+  }
+
+  private initializeLocale(): void {
+    const stored = localStorage.getItem(RaukApp.LOCALE_STORAGE_KEY);
+    if (stored === 'en' || stored === 'sv') {
+      this.locale = stored;
+    }
+    document.documentElement.lang = this.locale;
+  }
+
+  private setLocale(locale: Locale): void {
+    if (this.locale === locale) return;
+    this.locale = locale;
+    localStorage.setItem(RaukApp.LOCALE_STORAGE_KEY, locale);
+    document.documentElement.lang = locale;
   }
 
   private async loadData(): Promise<void> {
@@ -34,7 +56,7 @@ export class RaukApp extends LitElement {
       this.applyFilters();
       this.loading = false;
     } catch {
-      this.error = 'Failed to load collection. Please try again.';
+      this.error = t(this.locale, 'app.errorLoad');
       this.loading = false;
     }
   }
@@ -51,13 +73,13 @@ export class RaukApp extends LitElement {
   }
 
   private applyFilters(): void {
-    const { query, language, set, grade, sort } = this.filters;
+    const { query, language, sets, grade, sort } = this.filters;
     const q = query.trim().toLowerCase();
     const normalizedQ = q.startsWith('#') ? q.slice(1) : q;
 
     let results = this.allCards.filter(card => {
       if (language && getLanguage(card.Game) !== language) return false;
-      if (set && card.Set !== set) return false;
+      if (sets.length && !sets.includes(card.Set)) return false;
       if (grade) {
         if (grade === 'CE')  { if (card.Grade !== 'CE') return false; }
         else if (grade === '7') { if (gradeNumeric(card.Grade) > 7 || card.Grade === 'CE') return false; }
@@ -115,6 +137,17 @@ export class RaukApp extends LitElement {
     this.applyFilters();
   }
 
+  private get hasActiveFilters(): boolean {
+    const f = this.filters;
+    return (
+      f.query !== DEFAULT_FILTERS.query
+      || f.language !== DEFAULT_FILTERS.language
+      || f.sets.length > 0
+      || f.grade !== DEFAULT_FILTERS.grade
+      || f.sort !== DEFAULT_FILTERS.sort
+    );
+  }
+
   override render() {
     const visible   = this.filteredCards.slice(0, this.visibleCount);
     const hasMore   = this.filteredCards.length > this.visibleCount;
@@ -122,25 +155,48 @@ export class RaukApp extends LitElement {
     const count     = this.filteredCards.length;
 
     return html`
+      <div class="locale-switch" role="group" aria-label="Language switcher">
+        <button
+          type="button"
+          class="locale-btn ${this.locale === 'en' ? 'is-active' : ''}"
+          @click=${() => this.setLocale('en')}
+          aria-label=${t(this.locale, 'app.locale.switchToEnglish')}
+          aria-pressed=${String(this.locale === 'en')}
+        ><img class="flag-icon" src=${gbFlag} alt="" aria-hidden="true" decoding="async" /></button>
+        <button
+          type="button"
+          class="locale-btn ${this.locale === 'sv' ? 'is-active' : ''}"
+          @click=${() => this.setLocale('sv')}
+          aria-label=${t(this.locale, 'app.locale.switchToSwedish')}
+          aria-pressed=${String(this.locale === 'sv')}
+        ><img class="flag-icon" src=${seFlag} alt="" aria-hidden="true" decoding="async" /></button>
+      </div>
+
       <header class="personality-shell personality-header bg-raukar-balanced">
-        <h1>RaukCard Pokémon Card Collection</h1>
-        <p class="subtitle">${this.allCards.length} Pokémon cards in collection</p>
+        <h1>${t(this.locale, 'app.title')}</h1>
+        <p class="subtitle">${t(this.locale, 'app.subtitle', { count: this.allCards.length })}</p>
       </header>
 
       <rauk-filter-bar
         .filters=${this.filters}
         .languages=${this.languages}
         .sets=${this.sets}
+        .locale=${this.locale}
         @rauk-filter-change=${this.onFilterChange}
       ></rauk-filter-bar>
 
       <div class="results-bar personality-shell personality-results bg-raukar-subtle">
-        <span>${count} card${count !== 1 ? 's' : ''}</span>
-        <button class="reset-btn" @click=${this.reset}>Reset filters</button>
+        <span>${cardCountLabel(this.locale, count)}</span>
+        <button
+          class="reset-btn ${this.hasActiveFilters ? '' : 'is-hidden'}"
+          @click=${this.reset}
+          ?disabled=${!this.hasActiveFilters}
+          aria-hidden=${String(!this.hasActiveFilters)}
+        >${t(this.locale, 'app.resetFilters')}</button>
       </div>
 
       ${this.loading
-        ? html`<div class="loading">Loading collection…</div>`
+        ? html`<div class="loading">${t(this.locale, 'app.loadingCollection')}</div>`
         : this.error
           ? html`<div class="loading">${this.error}</div>`
           : html`
@@ -148,6 +204,7 @@ export class RaukApp extends LitElement {
               .cards=${visible}
               .hasMore=${hasMore}
               .remaining=${remaining}
+              .locale=${this.locale}
               @rauk-card-select=${this.onCardSelect}
               @rauk-load-more=${this.onLoadMore}
             ></rauk-card-grid>
@@ -157,6 +214,7 @@ export class RaukApp extends LitElement {
         <rauk-modal
           .card=${this.selectedCard}
           .allCards=${this.allCards}
+          .locale=${this.locale}
           @rauk-modal-close=${this.onModalClose}
         ></rauk-modal>
       ` : ''}
