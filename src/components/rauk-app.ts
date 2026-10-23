@@ -128,6 +128,14 @@ export class RaukApp extends LitElement {
     this.visibleCount += PAGE_SIZE;
   }
 
+  private onSortChange(e: Event): void {
+    this.filters = {
+      ...this.filters,
+      sort: (e.target as HTMLSelectElement).value,
+    };
+    this.applyFilters();
+  }
+
   private onModalClose(): void {
     this.selectedCard = null;
   }
@@ -187,12 +195,27 @@ export class RaukApp extends LitElement {
 
       <div class="results-bar personality-shell personality-results bg-raukar-subtle">
         <span>${cardCountLabel(this.locale, count)}</span>
-        <button
-          class="reset-btn ${this.hasActiveFilters ? '' : 'is-hidden'}"
-          @click=${this.reset}
-          ?disabled=${!this.hasActiveFilters}
-          aria-hidden=${String(!this.hasActiveFilters)}
-        >${t(this.locale, 'app.resetFilters')}</button>
+        <div class="results-actions">
+          <button
+            class="reset-btn ${this.hasActiveFilters ? '' : 'is-hidden'}"
+            @click=${this.reset}
+            ?disabled=${!this.hasActiveFilters}
+            aria-hidden=${String(!this.hasActiveFilters)}
+          >${t(this.locale, 'app.resetFilters')}</button>
+
+          <select
+            class="sort-select"
+            @change=${this.onSortChange}
+            .value=${this.filters.sort}
+            aria-label=${t(this.locale, 'app.sortCards')}
+          >
+            <option value="date-desc">${t(this.locale, 'filters.sortNewest')}</option>
+            <option value="date-asc">${t(this.locale, 'filters.sortOldest')}</option>
+            <option value="grade-desc">${t(this.locale, 'filters.sortGradeHighLow')}</option>
+            <option value="grade-asc">${t(this.locale, 'filters.sortGradeLowHigh')}</option>
+            <option value="name-asc">${t(this.locale, 'filters.sortNameAZ')}</option>
+          </select>
+        </div>
       </div>
 
       ${this.loading

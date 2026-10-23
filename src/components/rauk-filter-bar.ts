@@ -166,10 +166,6 @@ export class RaukFilterBar extends LitElement {
     this.emit({ ...this.filters, grade: (e.target as HTMLSelectElement).value });
   }
 
-  private onSortChange(e: Event): void {
-    this.emit({ ...this.filters, sort: (e.target as HTMLSelectElement).value });
-  }
-
   private toggleFilters(): void {
     this.filtersOpen = !this.filtersOpen;
   }
@@ -240,14 +236,6 @@ export class RaukFilterBar extends LitElement {
             <option value="7.5">${t(this.locale, 'filters.grade75')}</option>
             <option value="7">${t(this.locale, 'filters.grade7orBelow')}</option>
             <option value="CE">CE</option>
-          </select>
-
-          <select @change=${this.onSortChange} .value=${this.filters.sort}>
-            <option value="date-desc">${t(this.locale, 'filters.sortNewest')}</option>
-            <option value="date-asc">${t(this.locale, 'filters.sortOldest')}</option>
-            <option value="grade-desc">${t(this.locale, 'filters.sortGradeHighLow')}</option>
-            <option value="grade-asc">${t(this.locale, 'filters.sortGradeLowHigh')}</option>
-            <option value="name-asc">${t(this.locale, 'filters.sortNameAZ')}</option>
           </select>
 
           <select id="filter-set" multiple @change=${this.onSetNativeChange}>

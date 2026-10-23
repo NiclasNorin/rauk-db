@@ -253,7 +253,7 @@ header {
 
 .filters {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--spacing-md);
 
   &.is-collapsed {
@@ -306,6 +306,7 @@ select {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: var(--spacing-md);
   margin-bottom: calc(var(--base) * 2.5);
   font-size: 0.82rem;
   color: var(--color-text-muted);
@@ -323,6 +324,17 @@ select {
     background-size: cover;
     background-position: center;
   }
+}
+
+.results-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.sort-select {
+  width: auto;
+  min-width: 11.75rem;
 }
 
 .reset-btn {
@@ -387,4 +399,16 @@ select {
   .locale-switch { justify-content: center; }
   .filters { grid-template-columns: 1fr; }
   .filters > .ts-wrapper { grid-column: auto; }
+  .results-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .results-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .sort-select {
+    min-width: 0;
+    width: 100%;
+  }
 }
