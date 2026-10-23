@@ -58,9 +58,9 @@ export class RaukModal extends LitElement {
   private subGradeRow(label: string, value: string) {
     const display = value && value !== '-' ? value : '—';
     return html`
-      <div class="detail-sub">
-        <span class="detail-sub-label">${label}</span>
-        <span class="detail-sub-val">${display}</span>
+      <div class="sub-grade">
+        <span class="sub-label">${label}</span>
+        <span class="sub-val">${display}</span>
       </div>
     `;
   }

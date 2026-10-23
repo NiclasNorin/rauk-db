@@ -2,3 +2,6 @@ node_modules
 package-lock.json
 dist
 .claude
+
+# Prevent accidental commit of transpiled JS next to TS source
+src/**/*.js
