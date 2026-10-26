@@ -19,9 +19,11 @@
   background: linear-gradient(160deg, var(--color-modal-surface-start) 0%, var(--color-modal-surface-end) 100%);
   border: var(--border-width) solid var(--color-modal-border);
   border-radius: var(--border-radius-md);
+  box-sizing: border-box;
   width: 100%;
   max-width: 640px;
   max-height: 90vh;
+  overflow-x: hidden;
   overflow-y: auto;
   position: relative;
   padding: calc(var(--base) * 3.5);
@@ -338,13 +340,57 @@
 // ─── Responsive ───────────────────────────────────────────────────────────────
 
 @media (max-width: t.$breakpoint-sm) {
+  .modal-overlay {
+    align-items: flex-start;
+    padding: var(--spacing-md);
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .modal {
+    max-height: none;
+    padding: calc(var(--base) * 2);
+  }
+
+  .modal-close {
+    top: var(--spacing-sm);
+    right: var(--spacing-sm);
+  }
+
   .modal-body {
     grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+    margin: calc(var(--base) * 2.5) 0;
   }
 
   .tcgdex-img-wrap {
     width: 140px;
     margin: 0 auto;
     min-height: auto;
+  }
+
+  .detail-header {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+
+  .detail-subgrades {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-bottom: calc(var(--base) * 2.5);
+  }
+
+  .table-wrap {
+    border-radius: var(--border-radius-sm);
+  }
+
+  .grade-table {
+    font-size: var(--font-size-sm);
+
+    th,
+    td {
+      padding: calc(var(--base) * 0.9) var(--spacing-xs);
+      white-space: normal;
+      word-break: break-word;
+    }
   }
 }

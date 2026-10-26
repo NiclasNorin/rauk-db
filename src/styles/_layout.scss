@@ -399,6 +399,13 @@ select {
   .locale-switch { justify-content: center; }
   .filters { grid-template-columns: 1fr; }
   .filters > .ts-wrapper { grid-column: auto; }
+
+  .search-wrap #search,
+  select,
+  .sort-select {
+    font-size: 16px;
+  }
+
   .results-bar {
     flex-direction: column;
     align-items: stretch;

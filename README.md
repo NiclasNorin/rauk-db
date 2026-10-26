@@ -8,7 +8,30 @@ A web app for browsing and managing a personal collection of graded Pokémon tra
 - Filter by language, set, and grade; sort and search
 - Paginated grid (60 cards per page)
 - Card detail modal with grade distribution and TCGdex card data (image, rarity, illustrator)
+- Shareable URLs for search/filter/sort state and selected card modal
 - Data sourced from a Google Sheet via the OpenSheet API
+
+## Shareable URL Query Params
+
+The app keeps key UI state in the URL query string so views can be shared.
+
+Supported params:
+
+- `q` — search query text
+- `set` — repeatable set filter (`?set=Base+Set&set=Jungle`)
+- `grade` — grade filter (`10`, `9.5`, `9`, `8.5`, `8`, `7.5`, `7`, `CE`)
+- `sort` — sort mode (`date-desc`, `date-asc`, `grade-desc`, `grade-asc`, `name-asc`)
+- `card` — selected card id (opens modal when a matching card is found)
+
+Notes:
+
+- Filter/search/sort updates use `history.replaceState` (avoids back-button spam while refining filters).
+- Modal open/close uses `history.pushState` (back/forward navigates card modal state).
+- Unknown/invalid values are ignored safely.
+
+Example:
+
+`/?q=charizard&set=Base+Set&grade=9&sort=grade-desc&card=%23006`
 
 ## Tech Stack
 

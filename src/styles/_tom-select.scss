@@ -157,3 +157,20 @@
     }
   }
 }
+
+@media (max-width: 600px) {
+  .ts-wrapper {
+    .ts-control,
+    .ts-control input {
+      font-size: 16px;
+    }
+  }
+
+  .ts-dropdown {
+    font-size: 16px;
+
+    input {
+      font-size: 16px;
+    }
+  }
+}

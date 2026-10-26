@@ -2,7 +2,8 @@ import { LitElement, html } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { API_URL, PAGE_SIZE, DEFAULT_FILTERS } from '../lib/types';
 import type { Card, FilterState } from '../lib/types';
-import { getLanguage, gradeNumeric, compareCardsByGradeAndSubgrades } from '../lib/utils';
+import { deriveLanguages, deriveSets, filterAndSortCards } from '../lib/card-query';
+import { buildUrlFromState, findCardByParam, parseUrlState, sanitizeUrlFilters, type ParsedUrlState } from '../lib/url-state';
 import { DEFAULT_LOCALE, cardCountLabel, t, type Locale } from '../lib/i18n';
 import gbFlag from '../assets/flags/gb.svg';
 import seFlag from '../assets/flags/se.svg';
@@ -25,12 +26,26 @@ export class RaukApp extends LitElement {
   @state() private error = '';
   @state() private locale: Locale = DEFAULT_LOCALE;
 
+  private pendingUrlState: ParsedUrlState | null = null;
+  private isApplyingUrlState = false;
+
+  private readonly onPopState = (): void => {
+    this.applyUrlStateFromLocation();
+  };
+
   override async connectedCallback(): Promise<void> {
     super.connectedCallback();
     this.initializeLocale();
     document.body.classList.remove('theme-raukar-subtle', 'theme-raukar-dramatic');
     document.body.classList.add('theme-raukar-balanced');
+    this.pendingUrlState = this.parseUrlStateFromLocation();
+    window.addEventListener('popstate', this.onPopState);
     await this.loadData();
+  }
+
+  override disconnectedCallback(): void {
+    super.disconnectedCallback();
+    window.removeEventListener('popstate', this.onPopState);
   }
 
   private initializeLocale(): void {
@@ -53,7 +68,12 @@ export class RaukApp extends LitElement {
       const res = await fetch(API_URL);
       const data: Card[] = await res.json();
       this.allCards = data.filter(c => /pok[eé]mon/i.test(c.Game));
-      this.applyFilters();
+      if (this.pendingUrlState) {
+        this.applyUrlState(this.pendingUrlState);
+        this.pendingUrlState = null;
+      } else {
+        this.applyFilters();
+      }
       this.loading = false;
     } catch {
       this.error = t(this.locale, 'app.errorLoad');
@@ -61,67 +81,72 @@ export class RaukApp extends LitElement {
     }
   }
 
+  private parseUrlStateFromLocation(): { filters: Partial<FilterState>; cardId: string | null } {
+    return parseUrlState(window.location.search);
+  }
+
+  private sanitizeUrlFilters(raw: Partial<FilterState>, base: FilterState = this.filters): FilterState {
+    return sanitizeUrlFilters(raw, this.allCards, base, DEFAULT_FILTERS);
+  }
+
+  private findCardByParam(cardIdParam: string | null): Card | null {
+    return findCardByParam(cardIdParam, this.allCards);
+  }
+
+  private applyUrlState(urlState: ParsedUrlState): void {
+    this.isApplyingUrlState = true;
+    this.filters = this.sanitizeUrlFilters(urlState.filters);
+    this.applyFilters();
+    this.selectedCard = this.findCardByParam(urlState.cardId);
+    this.isApplyingUrlState = false;
+  }
+
+  private applyUrlStateFromLocation(): void {
+    if (!this.allCards.length) {
+      this.pendingUrlState = this.parseUrlStateFromLocation();
+      return;
+    }
+    this.applyUrlState(this.parseUrlStateFromLocation());
+  }
+
+  private syncUrlFromState(mode: 'replace' | 'push'): void {
+    if (this.isApplyingUrlState) return;
+
+    const nextUrl = buildUrlFromState(window.location.href, this.filters, this.selectedCard, DEFAULT_FILTERS);
+    const currentUrl = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+
+    if (nextUrl === currentUrl) return;
+
+    if (mode === 'push') {
+      window.history.pushState(null, '', nextUrl);
+      return;
+    }
+
+    window.history.replaceState(null, '', nextUrl);
+  }
+
   private get languages(): string[] {
-    return [...new Set(this.allCards.map(c => getLanguage(c.Game)))].sort();
+    return deriveLanguages(this.allCards);
   }
 
   private get sets(): string[] {
-    const scope = this.filters.language
-      ? this.allCards.filter(c => getLanguage(c.Game) === this.filters.language)
-      : this.allCards;
-    return [...new Set(scope.map(c => c.Set))].sort();
+    return deriveSets(this.allCards, this.filters.language);
   }
 
   private applyFilters(): void {
-    const { query, language, sets, grade, sort } = this.filters;
-    const q = query.trim().toLowerCase();
-    const normalizedQ = q.startsWith('#') ? q.slice(1) : q;
-
-    let results = this.allCards.filter(card => {
-      if (language && getLanguage(card.Game) !== language) return false;
-      if (sets.length && !sets.includes(card.Set)) return false;
-      if (grade) {
-        if (grade === 'CE')  { if (card.Grade !== 'CE') return false; }
-        else if (grade === '7') { if (gradeNumeric(card.Grade) > 7 || card.Grade === 'CE') return false; }
-        else { if (card.Grade !== grade) return false; }
-      }
-      if (q) {
-        const searchable = `${card['Card Name']} ${card.Set}`.toLowerCase();
-        const cardId = card.id.toLowerCase();
-        const normalizedCardId = cardId.startsWith('#') ? cardId.slice(1) : cardId;
-        const matchesText = searchable.includes(q);
-        const matchesId = cardId.includes(q)
-          || normalizedCardId.includes(normalizedQ)
-          || cardId.includes(normalizedQ);
-        if (!matchesText && !matchesId) return false;
-      }
-      return true;
-    });
-
-    results.sort((a, b) => {
-      const aDate = a['Date Graded'] ?? '';
-      const bDate = b['Date Graded'] ?? '';
-      switch (sort) {
-        case 'date-asc':   return aDate.localeCompare(bDate);
-        case 'date-desc':  return bDate.localeCompare(aDate);
-        case 'grade-desc': return compareCardsByGradeAndSubgrades(a, b, false);
-        case 'grade-asc':  return compareCardsByGradeAndSubgrades(a, b, true);
-        case 'name-asc':   return a['Card Name'].localeCompare(b['Card Name']);
-        default:           return 0;
-      }
-    });
-
-    this.filteredCards = results;
+    this.filteredCards = filterAndSortCards(this.allCards, this.filters);
     this.visibleCount = PAGE_SIZE;
   }
 
   private onFilterChange(e: Event): void {
     this.filters = (e as CustomEvent<FilterState>).detail;
     this.applyFilters();
+    this.syncUrlFromState('replace');
   }
 
   private onCardSelect(e: Event): void {
     this.selectedCard = (e as CustomEvent<Card>).detail;
+    this.syncUrlFromState('push');
   }
 
   private onLoadMore(): void {
@@ -134,15 +159,18 @@ export class RaukApp extends LitElement {
       sort: (e.target as HTMLSelectElement).value,
     };
     this.applyFilters();
+    this.syncUrlFromState('replace');
   }
 
   private onModalClose(): void {
     this.selectedCard = null;
+    this.syncUrlFromState('push');
   }
 
   private reset(): void {
     this.filters = { ...DEFAULT_FILTERS };
     this.applyFilters();
+    this.syncUrlFromState('replace');
   }
 
   private get hasActiveFilters(): boolean {
